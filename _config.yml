@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://iambowen.github.io
+url: http://iambowen.github.com
 title: Bowen's Blog
 subtitle: Blogging as will.
 author: Bowen Ma
@@ -92,7 +92,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name: iambowen1984
+disqus_short_name: iambowen
 disqus_show_comment_count: true
 
 # Google Analytics
