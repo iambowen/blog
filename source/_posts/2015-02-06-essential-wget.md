@@ -1,0 +1,236 @@
+---
+layout: post
+title: "essential wget"
+description: "essential wget"
+category: "ops"
+tags: ["linux", "ops", "wget"]
+---
+
+
+### 什么wget
+---
+[wget](https://www.gnu.org/software/wget/)是*nix下常用的下载文件或者测试web服务的工具，
+wget支持多种网络协议，但是从介绍看，wget更像是一个文件下载工具。
+
+### 获取网页源码
+----
+`wget`默认会将网页或者文件直接下载保存,所以直接显示返回内容的话，可以用 `-q`关闭`wget`的输出,然后用`-O -`
+将输出重定向到标准输出，然后用`cat`将内容打印出来。
+
+```bash
+~> wget echo.httpkit.com
+--2015-02-10 11:01:50--  http://echo.httpkit.com/
+Resolving echo.httpkit.com... 50.112.251.120
+Connecting to echo.httpkit.com|50.112.251.120|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 374 [application/json]
+Saving to: ‘index.html’
+
+~> wget -qO - echo.httpkit.com | cat
+......
+ "headers": {
+   "x-forwarded-for": "210.74.157.146",
+   "host": "echo.httpkit.com",
+   "user-agent": "Wget/1.14 (darwin12.5.0)",
+   "accept": "*/*"
+ },
+ ......
+```
+
+### 文件下载
+----
+`wget`缺省会将url中最后的文件作为文件名并且将文件保存在本地，用下面的命令可以将文件保存到指定的目录，这点比`curl`要好。
+
+```bash
+~> wget -P /opt http://ergonlogic.com/files/boxes/debian-current.box
+```
+
+### 通过代理访问资源
+----
+
+有两种方式可以让`wget`时使用proxy，第一种是通过设置环境变量，`http_proxy, https_proxy`。
+
+```bash
+~> export http_proxy="http://proxy:3128"
+```
+让proxy对一些地址无效。
+
+```bash
+~> export no_proxy="127.0.0.1,localhost.localdomain"
+```
+
+另外一种是在运行命令时直接指定使用的proxy或者不使用proxy。
+
+```bash
+~> wget  -e http_proxy=127.0.0.1:8080 www.baidu.com
+~> wget --no-proxy www.baidu.com
+```
+同样是不使用proxy，curl的`--noproxy`是需要指定一个exclude的列表，但是wget的`--no-proxy`就是
+针对当前访问资源，不使用proxy。
+
+### 花式下载和断点续传
+----
+对于wildcard支持，wget的介绍感觉有点乱，提供的参数看上去不怎么友好，想实现和`curl`中一样的效果，可能要换个方式。
+
+```bash
+~> wget  http://iambowen.github.io/images/{1..3}.png
+--2015-02-17 14:19:35--  http://iambowen.github.io/images/1.png
+Resolving iambowen.github.io... 103.245.222.133
+Connecting to iambowen.github.io|103.245.222.133|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 227632 (222K) [image/png]
+Saving to: ‘1.png’
+--2015-02-17 14:19:35--  http://iambowen.github.io/images/2.png
+Reusing existing connection to iambowen.github.io:80.
+HTTP request sent, awaiting response... 200 OK
+Length: 350735 (343K) [image/png]
+Saving to: ‘2.png’
+.....
+Saving to: ‘3.png’
+```
+
+### 获取headers信息
+----
+wget可以用`-S`参数来查看返回的header信息。
+
+```bash
+~> wget -qS www.baidu.com
+ HTTP/1.1 200 OK
+ Date: Tue, 10 Feb 2015 08:27:27 GMT
+ Content-Type: text/html; charset=utf-8
+ Transfer-Encoding: chunked
+ Connection: Keep-Alive
+ ......
+```
+
+### 返回redirection信息
+----
+不同于curl，wget缺省就是follow redirections。
+
+```bash
+~> wget -qS www.google.com
+ HTTP/1.1 302 Found
+ Location: http://www.google.com.hk/url?sa=p&hl=zh-CN&pref=hkredirect&pval=yes&q=http://www.google.com.hk/%3Fgws_rd%3Dcr&ust=1423559992840904&usg=AFQjCNFkDUqlbUFFIcVDOEXMELBQnEsZIA
+ Cache-Control: private
+ Content-Type: text/html; charset=UTF-8
+ ......
+ HTTP/1.1 302 Found
+ Location: http://www.google.com.hk/?gws_rd=cr
+ Cache-Control: private
+ ......
+ HTTP/1.1 200 OK
+ Date: Tue, 10 Feb 2015 09:19:23 GMT
+ Expires: -1
+ ......
+```
+
+### 加入验证的请求
+----
+```bash
+~> wget http://user:password@echo.httpkit.com?queryString
+```
+
+### 伪装user agent的请求
+----
+
+```bash
+~> wget --user-agent="Mozilla: Gay" -qO- echo.httpkit.com | cat
+"headers": {
+  "host": "echo.httpkit.com",
+  "user-agent": "Mozilla: Gay",
+  "accept": "*/*"
+}
+```
+`-U`的作用和`--user-agent`一样, wget的option parse是用`getopt`实现，所以可以理解`-U`的存在。
+
+### request with HTTP header
+----
+使用`--header=String`去添加header,可以在一个请求中设置多次。
+
+```bash
+~> wget --header="Cartman: is bitch"  --header="JB: stands for Justin Bieber" -qO- echo.httpkit.com | cat
+.....
+ "headers": {
+   "x-forwarded-for": "210.74.157.146",
+   "host": "echo.httpkit.com",
+   "user-agent": "Wget/1.14 (darwin12.5.0)",
+   "accept": "*/*",
+   "cartman": "is bitch",
+   "jb": "stands for Justin Bieber"
+ },
+.....
+```
+
+### HTTP 请求
+----
+`wget`支持自定义HTTP请求类型，可以用`--method=`去指定HTTP请求的方法，注意，比较老的版本中没有提供这项功能。
+
+```bash
+~> wget --method="PUT" --header='Content-Type: application/json' --body-data="firstName=Kris&lastName=Jordan" echo.httpkit.com
+{
+"method": "PUT",
+......
+"headers": {
+  "x-forwarded-for": "210.74.157.146",
+  "host": "echo.httpkit.com",
+  "user-agent": "Wget/1.16.1 (darwin14.0.0)",
+  "accept": "*/*",
+  "accept-encoding": "identity",
+  "content-type": "application/json",
+  "content-length": "30"
+},
+"body": "firstName=Kris&lastName=Jordan",
+......
+}
+```
+如果是用POST方法则简单了许多，直接指定请求的body string就可以。
+
+```bash
+~> wget --header='Content-Type: application/json' --post-data="firstName=Kris&lastName=Jordan" -qO- echo.httpkit.com | cat
+{
+"method": "POST",
+......
+"headers": {
+  "x-forwarded-for": "210.74.157.146",
+  "host": "echo.httpkit.com",
+  "user-agent": "Wget/1.16.1 (darwin14.0.0)",
+  "accept": "*/*",
+  "accept-encoding": "identity",
+  "content-type": "application/json",
+  "content-length": "30"
+},
+"body": "firstName=Kris&lastName=Jordan",
+......
+}
+```
+组装body的方式比curl要稍微简单些，但是不太直观，不是很喜欢。
+
+### 处理cookies
+----
+保存cookie到本地
+
+```bash
+~> wget --save-cookies cookies.txt -q www.baidu.com
+~> less cookies.txt
+# HTTP cookie file.
+# Generated by Wget on 2015-02-17 16:05:04.
+# Edit at your own risk.
+
+.baidu.com      TRUE    /       FALSE   3571643951      BAIDUPSID       3603BF98B1056E609FE72D7D976C0235
+.baidu.com      TRUE    /       FALSE   3571643951      BAIDUID 3603BF98B1056E609FE72D7D976C0235:FG=1
+```
+请求时携带cookie
+
+```bash
+~> wget --load-cookies cookies.txt  -q www.baidu.com
+```
+除此之外，还可以在请求时的header中添加cookie信息。
+
+```bash
+wget --no-cookies --header "Cookie: name=value"
+```
+
+### FYI
+----
+wget还有一些其他的黑科技，比如可以下载整个网站之类的，不过平常应该不太会用到。
+Anyway,还是觉得curl要比wget好用些-_-!
