@@ -10,8 +10,8 @@ categories: ["ssh", "practice"]
 
 1. 客户把AWS的ssh instance的private key通过slack拷给了同事；
 2. 同事发现用部署工具[fabric](http://www.fabfile.org/)可以使用该key，ssh到EC2的instance上进行部署；
-3. 但是如果使用key去ssh(如`ssh -i key user@instance`)到EC2的instance，就会提示输入`passpharse`
-4. 客户的Ops很肯定说这个private key没有加`passpharse`
+3. 但是如果使用key去ssh(如`ssh -i key user@instance`)到EC2的instance，就会提示输入`passphrase`
+4. 客户的Ops很肯定说这个private key没有加`passphrase`
 
 这个问题很有趣，我先查看了下key，在我的印象里，如果在`ssh-keygen`的时候加入密码保护了，private
 key 中会有如下的额外信息:
@@ -49,6 +49,7 @@ debug1: key_parse_private_pem: PEM_read_PrivateKey failed
 private key的开始或者结束的marker出问题了，于是客户询问这个key是不是从slack拷贝过去的，因为
 聊天工具有时候会自动纠错，把结束的marker `----`自动改成`——`，他曾经就遇到过这种情况。
 再看一遍private key，果然是这样……好羞愧。修改后，果然可以顺利ssh 到instance上了。
+(更正下，虽然他指出了问题的来源，但是这段debug信息，在private key是完整的情况下仍然存在，所以这不是key出错的绝对证据。)
 
 从这个事情中，我们可以得到一些教训
 
