@@ -3,7 +3,7 @@ layout: post
 title: "on dockerising a frontend build pipeline"
 date: 2016-08-16 13:08:58 +0800
 comments: true
-categories:["docker","ci"]
+categories: ["docker","ci"]
 ---
 最近花了一段时间把主站的build pipeline docker化了，时间长到感觉自己的reputation都要被毁了。
 在此总结下这个过程以及碰到的问题，希望对大家能有所帮助。

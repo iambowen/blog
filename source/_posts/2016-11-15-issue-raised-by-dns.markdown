@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ""issue raised by DNS""
+title: "issue raised by DNS"
 date: 2016-11-15 21:33:22 +1100
 comments: true
 categories: ["DNS"]
