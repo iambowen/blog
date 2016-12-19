@@ -42,7 +42,7 @@ tags: ["test"]
 ----
 测试金字塔是Mike Cohn提出的概念，意思是测试从上到下-功能性测试到单元测试，数量由少到多，呈一个金字塔形。
 
-![pyramid](http://martinfowler.com/bliki/images/testPyramid/pyramid.png)
+![pyramid](http://martinfowler.com/bliki/images/testPyramid/test-pyramid.png)
 
 上图引自Martin Fowler的测试金字塔的文章，其实不用他说，写过测试的都知道，单元测试的成本最低，运行
 速度最快，但是到功能性测试，需要启动UI/浏览器去测试，成本很高，所以单元测试可以多考虑edge case，而
