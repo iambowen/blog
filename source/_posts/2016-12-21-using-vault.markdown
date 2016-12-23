@@ -1,11 +1,3 @@
----
-layout: post
-title: "using vault"
-date: 2016-12-21 21:31:03 +0800
-comments: true
-categories: ["security", "vault"]
----
-
 以前曾经介绍过关于[KMS的用法](http://www.jianshu.com/p/041387fe6c4e)，其中，提到了它的优点和用处，我们使用的场景有如下几点:
 
 1. 我们产品的环境的所有的配置都保存在git上(Config As Code?)，所以相关的密码、private key等需要加密
@@ -142,7 +134,7 @@ curl -X PUT -d '{"key": "NtiuGes+nUiWUBHkmvmYZcorxsePTpALfhRILQSNXqI="}'  http:/
 对应的创建`user-policy`:
 
 ```bash
-curl -v -X POST  -H "X-Vault-Token:e4347e60-0e72-fa8f-05e8-94c7388bb12c" -d '{"rules":"path \"secret/*\" {\n  policy = \"read\"\n}"}'   http://127.0.0.1:8200/v1/sys/policy/user-policy
+curl -X POST  -H "X-Vault-Token:e4347e60-0e72-fa8f-05e8-94c7388bb12c" -d '{"rules":"path \"secret/*\" {\n  policy = \"read\"\n}"}'   http://127.0.0.1:8200/v1/sys/policy/user-policy
 
 curl -X GET  -H "X-Vault-Token:e4347e60-0e72-fa8f-05e8-94c7388bb12c"  http://127.0.0.1:8200/v1/sys/policy/user-policy | jq
 
@@ -304,17 +296,10 @@ curl -X GET -H "X-Vault-Token:$VAULT_TOKEN"          http://127.0.0.1:8200/v1/au
 然后利用`client_token`去读取前面写入到vault中的search api token:
 
 ```bash
- ~> curl -X GET -H "X-Vault-Token:e0fe3cfb-1323-4ec6-9490-d6ac06dc3c69"  http://127.0.0.1:8200/v1/secret/api/search | jq '{"api-token": .data.token}'
+ curl -X GET -H "X-Vault-Token:e0fe3cfb-1323-4ec6-9490-d6ac06dc3c69"  http://127.0.0.1:8200/v1/secret/api/search | jq '{"api-token": .data.token}'
 {
   "api-token": "c192d0211cb81fbfeee53fb16e2a7465"
 }
-```
-
-感觉写的有点长了，encyption as 
-
-```bash
-curl -X POST -H "X-Vault-Token:$VAULT_TOKEN" -d '{"type":"ssh"}' http://127.0.0.1:8200/v1/sys/auth/ssh
-
 ```
 
 ## 秘钥管理
