@@ -5,10 +5,9 @@ description: "essential skills on ssh"
 category: 'ssh'
 tags: [ssh]
 ---
-
 # 什么是SSH
 ----
-* [Secure Shell (SSH)](http://en.wikipedia.org/wiki/Secure_Shell)* 是一种加密网络协议，主要用作以下用途:
+ [Secure Shell (SSH)](http://en.wikipedia.org/wiki/Secure_Shell) 是一种加密网络协议，主要用作以下用途:
 
  - secure data communication  (安全数据传输)
  - remote command-line login  (远程命令行登陆)
@@ -26,7 +25,7 @@ SSH是传输层协议，有不同的版本(有SSH1和SSH2)，SSH协议框架分�
 3. 连接协议: 在底层的SSH链接基础上的多路复用的多个逻辑链路。
 
 SSH连接过程如下图：
-![ssh connection](/images/ssh.jpeg)
+![ssh connection](http://upload-images.jianshu.io/upload_images/2419194-68856e3d2e267700.gif?imageMogr2/auto-orient/strip)
 
 大致可以分为如下的步骤：
 
@@ -253,8 +252,8 @@ ssh常见的用法大概就是这些，详细的原理以及其他用法可以�
 
 ## references
 ------
-[1](https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys)
-[2](http://www.cisco.com/web/about/ac123/ac147/archived_issues/ipj_12-4/124_ssh.html)
-[3](http://newfdawg.com/docs/HP-SSH_Explained.PDF)
-[4](http://www.wildlee.org/2011_03_1305.html)
-[5](http://zh.wikipedia.org/wiki/%E8%BF%AA%E8%8F%B2%EF%BC%8D%E8%B5%AB%E5%B0%94%E6%9B%BC%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2)
+1. https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys
+2. http://www.cisco.com/web/about/ac123/ac147/archived_issues/ipj_12-4/124_ssh.html
+3. http://newfdawg.com/docs/HP-SSH_Explained.PDF
+4. http://www.wildlee.org/2011_03_1305.html
+5. http://zh.wikipedia.org/wiki/%E8%BF%AA%E8%8F%B2%EF%BC%8D%E8%B5%AB%E5%B0%94%E6%9B%BC%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2
