@@ -114,3 +114,6 @@ AWS的Cloudformation内建了对红黑部署的支持，比如我的这个[例�
 ## Reference
 ----
 1. [不可变基础设施](https://www.oreilly.com/ideas/an-introduction-to-immutable-infrastructure)
+2. [Red Black Deployment](http://rhelblog.redhat.com/tag/redblack-deployment-model/)
+3. [Blue Green Deployment](https://martinfowler.com/bliki/BlueGreenDeployment.html 
+)
